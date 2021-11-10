@@ -1,3 +1,5 @@
+![全景](./doc/全景.png)
+
 # <span style="color:#22AAFF">センサで温湿度を計測し、AWSにデータを通知する</span>
 
 ## <span style="color:#DD8800; ">（RaspberryPi）温度・湿度センサー環境の作成</span>

@@ -296,8 +296,8 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   |種別|名前|IPアドレス|  
   |--|--|--|  
   |VPC|biweb-dev-vpc|10.0.0.0/16|  
-  |サブネット|biweb-dev-pub-subnet1|10.0.32.0/20|  
-  |EC2|biweb-dev-web|10.0.20.240/20|  
+  |サブネット|biweb-dev-pub-subnet1|10.0.16.0/20|  
+  |EC2|biweb-dev-web|10.0.20.any|  
 
 - EC2を作成する前に、サブネットの「自動割当IP設定」を有効化する。
 

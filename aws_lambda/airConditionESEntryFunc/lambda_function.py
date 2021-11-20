@@ -13,7 +13,9 @@ def lambda_handler(event, context):
         tm = record['dynamodb']['NewImage']['GetDateTime']['S']
         tmp = record['dynamodb']['NewImage']['Temperature']['N']
         hum = record['dynamodb']['NewImage']['Humidity']['N']
-        data={"GetDateTime":tm,"Humidity":float(hum),"Temperature":float(tmp)}
+        co2 = record['dynamodb']['NewImage']['CO2']['N']
+        tvoc = record['dynamodb']['NewImage']['TVOC']['N']
+        data={"GetDateTime":tm,"Humidity":float(hum),"Temperature":float(tmp),"CO2":int(co2),"TVOC":int(tvoc)}
 
         #ElasticSearchへ投入
         r = requests.post(URL + "/" + os.environ["index"] + "/_doc" , headers=HEADERS, json=data)

@@ -299,6 +299,7 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   |サブネット|biweb-dev-pub-subnet1|10.0.16.0/20|  
   |EC2|biweb-dev-web|10.0.20.any|  
 
+- なお、/16は先頭16ビットまでがサブネットマスクであることを示している（CIDR形式と呼ぶ）
 - EC2を作成する前に、サブネットの「自動割当IP設定」を有効化する。
 
 - EC2作成時、セキュリティグループには、SSHアクセスだけを許可とする。Sourceは「マイIP」をクリックして自宅のIPからの要求だけ許可とする

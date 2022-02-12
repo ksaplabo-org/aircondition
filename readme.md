@@ -1,5 +1,23 @@
 ![全景](./doc/全景.png)
 
+# <span style="color:#ffff00">事前準備 RasPi Wifi設定</span>
+
+## <span style="color:#DD8800; ">（RaspberryPi）Wifi設定の手順 ※既に行っている場合は飛ばしても良い</span>
+
+wpa_supplicantフォルダ配下に【wpa_supplicant.conf】でファイルを作成
+
+その後、ファイル内に以下のように書き込んで設定は完了
+``` 
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=JP
+
+network={
+        ssid="1つ目のSSID"
+        psk="1つ目のSSIDのパスワード"
+        key_mgmt=WPA-PSK
+}
+```
 # <span style="color:#22AAFF">センサで温湿度を計測し、AWSにデータを通知する</span>
 
 ## <span style="color:#DD8800; ">（RaspberryPi）温度・湿度センサー環境の作成</span>
@@ -705,6 +723,15 @@ $ pip3 install adafruit-circuitpython-ssd1306
 # CCS811用ドライバ インストール
 $ pip3 install adafruit-circuitpython-ccs811 
 
+# board モジュール　インストール
+$ pip3 install board
+
+※この後の実行でModuleNotFoundError:No module named 'board'　と結果が出たら
+以下コマンドを実行する。　これでダメな場合は2個目の強制インストールを実行する
+$ pip3 install adafruit-blinka_
+
+$ sudo python3 -m pip install --force-reinstall adafruit-blinka
+
 # 液晶表示用のフォント インストール
 $ sudo apt-get install fonts-noto 
 ```
@@ -715,6 +742,7 @@ $ sudo apt-get install fonts-noto
 ```
 $ python3 aircond3.py
 ```
+
 以下のように表示されればOK。
 ![gamen](./doc/WIN_20211110_00_19_55_Pro.jpg)
 

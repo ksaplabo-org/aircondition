@@ -728,9 +728,9 @@ $ pip3 install board
 
 ※この後の実行でModuleNotFoundError:No module named 'board'　と結果が出たら
 以下コマンドを実行する。　これでダメな場合は2個目の強制インストールを実行する
-$ pip3 install adafruit-blinka_
+$ pip3 install adafruit-blinka
 
-$ sudo python3 -m pip install --force-reinstall adafruit-blinka
+$ python3 -m pip install --force-reinstall adafruit-blinka
 
 # 液晶表示用のフォント インストール
 $ sudo apt-get install fonts-noto 

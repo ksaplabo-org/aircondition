@@ -320,6 +320,8 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   |サブネット|biweb-dev-pub-subnet1|10.0.16.0/20|  
   |EC2|biweb-dev-web|10.0.20.any|  
 
+![AWSNetWork](./doc/awsvpc.png)
+
 - なお、/16は先頭16ビットまでがサブネットマスクであることを示している（CIDR形式と呼ぶ）
 - EC2を作成する前に、サブネットの「自動割当IP設定」を有効化する。
 

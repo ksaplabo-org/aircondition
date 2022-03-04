@@ -472,7 +472,11 @@ $ sudo curl http://localhost:9200
 }
 ```
 
-同様に外部からのアクセスを確認。ブラウザで「http://[ip address]:9200/」にアクセスし、上と同じ表示がされればOK。
+同様に外部からのアクセスを確認。最初にAWSのセキュリティグループで、ポート9200を許可設定する。
+
+![awsvpc2](./doc/awsvpc2.png)
+
+ブラウザで「http://[ip address]:9200/」にアクセスし、上と同じ表示がされればOK。
 
 ## <span style="color:#DD8800; ">（AWS）EC2にKibanaをセットアップする
 
@@ -539,6 +543,12 @@ $ sudo curl http://localhost:5601
 ```
 
 ↑ 特にエラーなど、何もでなければ、おそらく(笑) 問題なし。
+
+外部からのアクセスを確認する。AWSのセキュリティグループで、ポート5601の接続許可を設定する。
+
+![awsvpc3](./doc/awsvpc3.png)
+
+
 ブラウザで「http://[ip address]:5601/」にアクセスし、下の画面が表示がされればOK。
 
 ![kibana](./doc/kibana.png)

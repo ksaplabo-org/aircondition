@@ -690,7 +690,9 @@ $ zip -r airConditionESEntryFunc.zip ./*
 
 RaspberryPiに、以下のように取付を行う。
 
-![取付例](./doc/CCS811&SSD1306.png)
+![取付例1](./doc/SSD1306.png)
+
+![取付例2](./doc/CCS811&SSD1306.png)
 
 取付時のポイント
 - 各機器のVIN、GNDは、RaspberryPiの5V、GNDと接続する（動作に4.5V以上が必要なため、電源は3.3Vではなく、5Vの方に接続すること）

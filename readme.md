@@ -4,6 +4,8 @@
 
 ## <span style="color:#DD8800; ">（RaspberryPi）Wifi設定の手順 ※既に行っている場合は飛ばしても良い</span>
 
+[※参考リンク（同GitのWiFi設定手順ページ）](https://github.com/ksaplabo-org/Raspi-Setup#wifi%E8%A8%AD%E5%AE%9A%E3%81%AE%E6%89%8B%E9%A0%86)
+
 wpa_supplicantフォルダ配下に【wpa_supplicant.conf】でファイルを作成
 
 その後、ファイル内に以下のように書き込んで設定は完了
@@ -767,5 +769,4 @@ $ python3 aircond3.py
 - Lambda
 - ElasticSearch
 - Kibana
-- testhugahuga
 

@@ -212,7 +212,7 @@ $ cd airConditionNotifyLineFunc
 ```
 直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。  
 ※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。  
-※上記ソースコードは追加課題で使用する二酸化炭素センサ用の記述があるため、この時点では当該箇所（co2、tvocの変数設定）のコメントアウト、payloadに記述されたco2、tvocの記述の削除が必要。
+※上記ソースコードはすでに追加課題で使用する二酸化炭素センサ用の記述がある。<br>そのため、この時点では当該箇所（co2、tvocの変数設定）のコメントアウト、payloadに記述されたco2、tvocの記述の削除が必要。
 ![修正後ソース](./doc/lambda_function_mod1.png)
 
 

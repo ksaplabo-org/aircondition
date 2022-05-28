@@ -110,7 +110,7 @@ $ pip3 install paho-mqtt python-etcd
 
 ---- 
 #### ここでのハマりどころ
-- 注意点として、<span style="color:#FF4400">取得した証明書や秘密鍵を作業フォルダにコピーしないこと。</span>  
+- 注意点として、<span style="color:#FF4400">**取得した証明書や秘密鍵を作業フォルダにコピーしないこと。**</span>  
   `「$ git add .」`でうっかりGitHubにアップされてしまうリスクがある。  
   これらがVSSに上がると、GitHubとAWSの双方からセキュリティリスクの通知メールと、  
   アカウント停止警告メールが来ることになり、対応が大変。
@@ -211,7 +211,10 @@ $ mkdir airConditionNotifyLineFunc
 $ cd airConditionNotifyLineFunc
 ```
 直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。  
-※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。
+※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。  
+※上記ソースコードは追加課題で使用する二酸化炭素センサ用の記述があるため、この時点では当該箇所（co2、tvocの変数設定）のコメントアウト、payloadに記述されたco2、tvocの記述の削除が必要。
+![修正後ソース](./doc/lambda_function_mod1.png)
+
 
 このソースファイルに必要なライブラリ「requests」を、カレントディレクトリ上にインストールする。
 ``` bash

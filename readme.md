@@ -216,8 +216,8 @@ $ cd airConditionNotifyLineFunc
 ``` bash
  sudo git clone https://github.com/szazo/DHT11_Python.git
 ```
-※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。
-※上記ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述
+※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。<br>
+※ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述のためいったん無視する。
 ![修正後ソース](./doc/lambda_function_mod1.png)
 
 

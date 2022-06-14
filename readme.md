@@ -6,9 +6,9 @@
 
 [※参考リンク（同GitのWiFi設定手順ページ）](https://github.com/ksaplabo-org/Raspi-Setup#wifi%E8%A8%AD%E5%AE%9A%E3%81%AE%E6%89%8B%E9%A0%86)
 
-wpa_supplicantフォルダ配下に【wpa_supplicant.conf】でファイルを作成
+OSインストールしたmicroSDのルートディレクトリダ配下に「ssh」という空のファイルを作成後、同階層に「wpa_supplicant.conf」というファイルを作成
 
-その後、ファイル内に以下のように書き込んで設定は完了
+その後、「wpa_supplicant.conf」ファイル内に以下のように書き込んで設定は完了
 ``` 
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -78,17 +78,18 @@ $ sudo rm -rf ./DHT11_Python
 
 以下の手順で、接続してくるRaspberryPiを、仮想の「モノ」として登録する 
 - 「サービス」から「AWS IoT Core」を選択。
-- 「管理」から「モノ」(Thing)を選択し、「モノを作成」をクリック
+- 「管理」から「すべてのデバイス」→「モノ」(Thing)を選択し、「モノを作成」をクリック
 - 「１つのモノを作成」を選んで「次へ」
 - 「モノの名前」に任意の名前を入力（「air-condition-pi」）して「次へ」
 - 「デバイス証明書」で「新しい証明書を自動生成 (推奨)」を選択して「次へ」
-- 「証明書にポリシーをアタッチ」で「ポリシーを作成」をクリック。以下の内容を入力して「作成」をクリック。
-  - 名前：任意（例：air-condition-pi-policy）
-  - アクション：「iot:*」
-  - リソースARN：「*」
-  - 効果：「許可」をチェック
+- 「証明書にポリシーをアタッチ」で「ポリシーを作成」をクリック。新たに開かれたタブにて以下の内容を入力して「作成」をクリック。ポリシー作成後はタブは閉じてよい。
+  - 名前：air-condition-pi-policy　（任意に設定できるが、今回はこの名前とする）
+  - 効果：「許可」
+  - アクション：「*」（選択）
+  - リソースARN：「*」（入力）
+
 - ひとつ前の画面（証明書にポリシーをアタッチ）に戻り、作成したポリシーを選択して「モノを作成」をクリック。
-- ここで表示される証明書、プライベートキー、パブリックキーをすべてダウンロードする。
+- ここで表示される証明書、プライベートキー、パブリックキーをすべてダウンロードする。<br>※ここでダウンロード失敗した場合はポリシー作成からやり直し
 
 また、RaspberryPiが接続するための、IoTエンドポイントを以下の手順で確認する。
 - （AWS IoTメニューの）「設定」をクリック
@@ -104,7 +105,7 @@ $ sudo rm -rf ./DHT11_Python
 $ pip3 install paho-mqtt python-etcd
 ```
 
-サンプルソースを修正して、MQTTへの配信（パブリッシャ）機能を付与する。  
+前段でサンプルをコピーして作成したaircond.pyを修正して、MQTTへの配信（パブリッシャ）機能を付与する。  
 修正後の[ソースはこちら](./aircond2.py)。  
 ※ソース上の定義部分「# Mqtt Define」の内容は、前述のデバイスデータエンドポイントや、証明書に置き換えてください。
 
@@ -210,9 +211,13 @@ $ cd aws_lambda
 $ mkdir airConditionNotifyLineFunc
 $ cd airConditionNotifyLineFunc
 ```
-直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。  
-※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。  
-※上記ソースコードはすでに追加課題で使用する二酸化炭素センサ用の記述がある。<br>そのため、この時点では当該箇所（co2、tvocの変数設定）のコメントアウト、payloadに記述されたco2、tvocの記述の削除が必要。
+直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。
+
+``` bash
+ sudo git clone https://github.com/szazo/DHT11_Python.git
+```
+※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。
+※上記ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述
 ![修正後ソース](./doc/lambda_function_mod1.png)
 
 

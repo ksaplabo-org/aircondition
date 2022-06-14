@@ -17,10 +17,10 @@ def lambda_handler(event, context):
         tm = "{0:s}時{1:s}分{2:s}秒".format(tm[11:13] ,tm[14:16] ,tm[17:19])
         tmp = record['dynamodb']['NewImage']['Temperature']['N']
         hum = record['dynamodb']['NewImage']['Humidity']['N']
-        co2 = record['dynamodb']['NewImage']['CO2']['N']
-        tvoc = record['dynamodb']['NewImage']['TVOC']['N']
-        payload = "測定時刻 {0}、気温 {1:.1f}℃、湿度 {2:.1f}%、CO2濃度{3:d}PPM、TVOC{4:d}PPB".format(tm ,float(tmp) ,float(hum) ,int(co2) ,int(tvoc))
-        
+        #co2 = record['dynamodb']['NewImage']['CO2']['N']
+        #tvoc = record['dynamodb']['NewImage']['TVOC']['N']
+        #payload = "測定時刻 {0}、気温 {1:.1f}℃、湿度 {2:.1f}%、CO2濃度{3:d}PPM、TVOC{4:d}PPB".format(tm ,float(tmp) ,float(hum) ,int(co2) ,int(tvoc))
+        payload = "測定時刻 {0}、気温 {1:.1f}℃、湿度 {2:.1f}%".format(tm ,float(tmp) ,float(hum))
 
         #送信データ設定
         send_data = {"messages": [{"type":"text","text":payload}]}

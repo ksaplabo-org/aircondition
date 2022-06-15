@@ -33,7 +33,7 @@ home/pi/kensyu_aws_yyyymmdd
 |:--|:--|:--|
 |kensyu_mqtt|[aircond2.py](./aircond2.py)|MQTT体験用|
 |aws_lambda/airConditionNotifyLineFunc|[lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py)|LINE連携Lambda<br>zipやライブラリ類は格納しない|
-|aws_lambda/airConditionESEntryFunc|[lambda_function.py](./aircond.pyaws_lambda/airConditionESEntryFunc/lambda_function.py)|ElasticSerach登録Lambda<br>zipやライブラリ類は格納しない|
+|aws_lambda/airConditionESEntryFunc|[lambda_function.py](./aws_lambda/airConditionESEntryFunc/lambda_function.py)|ElasticSerach登録Lambda<br>zipやライブラリ類は格納しない|
 
 # <span style="color:#22AAFF">センサで温湿度を計測し、AWSにデータを通知する</span>
 

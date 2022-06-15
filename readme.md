@@ -20,6 +20,21 @@ network={
         key_mgmt=WPA-PSK
 }
 ```
+
+# <span style="color:#ffff00">事前準備２ 研修用資材設置</span>
+## <span style="color:#DD8800; ">研修で使用する下記資材をRaspberryPiに設置する</span>
+設置場所は下記
+```
+home/pi/kensyu_aws_yyyymmdd
+```
+※「yyyymmdd」には研修当日の日付を入れる<br><br>
+
+|格納フォルダ|格納資材|備考|
+|:--|:--|:--|
+|kensyu_mqtt|[aircond2.py](aircond2.py)|MQTT体験用|
+|aws_lambda\airConditionNotifyLineFunc|[lambda_function.py](aws_lambda\airConditionNotifyLineFunc\lambda_function.py)|LINE連携Lambda<br>zipやライブラリ類は格納しない|
+|aws_lambda\airConditionESEntryFunc|[lambda_function.py](aws_lambda\airConditionESEntryFunc\lambda_function.py)|ElasticSerach登録Lambda<br>zipやライブラリ類は格納しない|
+
 # <span style="color:#22AAFF">センサで温湿度を計測し、AWSにデータを通知する</span>
 
 ## <span style="color:#DD8800; ">（RaspberryPi）温度・湿度センサー環境の作成</span>
@@ -30,10 +45,12 @@ $ mkdir AirCondition
 $ cd AirCondition
 ```
 
-下図のようにRaspberryPiと温湿度センサ「DHT11」を接続する。
+下図のようにRaspberryPiと温湿度センサ「DHT11」を接続する。<br>
+※全国研修では接続済のRaspberryPiを札幌支店に設置しておく
 
 ![DHT11](./doc/DHT11.png)
 
+★上記図は修正予定<br><br>
 GitHubからDHT11のライブラリを取得する。
 ``` bash
 $ sudo git clone https://github.com/szazo/DHT11_Python.git
@@ -53,12 +70,9 @@ Humidity: 73.0 %
 ：
 ```
 
-このサンプルソースをベースに、内容を作りこんでいく。
+ライブラリ以外を削除する
 
 ``` bash
-# サンプルをコピー 
-$ sudo cp ./DHT11_Python/example.py ./aircond.py
-
 # gitファイル削除
 $ cd DHT11_Python
 $ rm -rf .git
@@ -97,17 +111,19 @@ $ sudo rm -rf ./DHT11_Python
 
 ## <span style="color:#DD8800; ">（RaspberryPi）MQTT配信機能の作成</span>
 
-前述のサンプル機能に、MQTTへの配信（パブリッシャ）機能を付与して、AWSと通信させる。
+MQTTへの配信（パブリッシャ）機能を付与して、AWSと通信させる。
 
-最初に、MQTTクライアントのライブラリをインストールする。
-
+MQTT動作確認用ソースを「AirCondition」フォルダにコピーする。
+```
+$ cp home/pi/kensyu_aws_yyyymmdd/aircond2.py ./aircond2.py
+```
+MQTTクライアントのライブラリをインストールする。
 ``` bash
 $ pip3 install paho-mqtt python-etcd
 ```
 
-前段でサンプルをコピーして作成したaircond.pyを修正して、MQTTへの配信（パブリッシャ）機能を付与する。  
-修正後の[ソースはこちら](./aircond2.py)。  
-※ソース上の定義部分「# Mqtt Define」の内容は、前述のデバイスデータエンドポイントや、証明書に置き換えてください。
+「AirCondition」フォルダにコピーしたaircond2.pyに下記修正を行う。<br>
+※ソース上の定義部分「# Mqtt Define」の内容は、前述のデバイスデータエンドポイントや、証明書に置き換える。
 
 ---- 
 #### ここでのハマりどころ
@@ -213,9 +229,6 @@ $ cd airConditionNotifyLineFunc
 ```
 直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。
 
-``` bash
- sudo git clone https://github.com/szazo/DHT11_Python.git
-```
 ※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。<br>
 ※ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述のためいったん無視する。
 ![修正後ソース](./doc/lambda_function_mod1.png)

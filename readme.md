@@ -22,18 +22,24 @@ network={
 ```
 
 # <span style="color:#ffff00">事前準備２ 研修用資材設置</span>
-## <span style="color:#DD8800; ">研修で使用する下記資材をRaspberryPiに設置する</span>
+## <span style="color:#DD8800; ">研修で使用する下記資材を当日までにRaspberryPiに設置する</span>
 設置場所は下記
 ```
-home/pi/kensyu_aws_yyyymmdd
+home/pi/kensyu_aws_20220618
 ```
-※「yyyymmdd」には研修当日の日付を入れる<br><br>
+※「_yyyymmdd」部分に、研修当日の日付を入れる<br><br>
 
 |格納フォルダ|格納資材|備考|
 |:--|:--|:--|
-|kensyu_mqtt|[aircond2.py](./aircond2.py)|MQTT体験用|
-|aws_lambda/airConditionNotifyLineFunc|[lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py)|LINE連携Lambda<br>zipやライブラリ類は格納しない|
-|aws_lambda/airConditionESEntryFunc|[lambda_function.py](./aws_lambda/airConditionESEntryFunc/lambda_function.py)|ElasticSerach登録Lambda<br>zipやライブラリ類は格納しない|
+|home/pi/kensyu_aws_20220618/kensyu_mqtt|[aircond2.py](./aircond2.py)|MQTT体験用|
+|home/pi/kensyu_aws_20220618/kensyu_mqtt|[aircond3.py](./aircond3.py)|追加課題体験用|
+<br>
+
+***
+★研修に使用するラズパイのDownloadsフォルダに何も入っていないことを確認する。余計なファイルは削除しておく
+***
+<br>
+
 
 # <span style="color:#22AAFF">センサで温湿度を計測し、AWSにデータを通知する</span>
 
@@ -70,6 +76,10 @@ Humidity: 73.0 %
 ：
 ```
 
+***
+★ここでexample.pyのプログラムの説明を行う
+***
+
 ライブラリ以外を削除する
 
 ``` bash
@@ -96,34 +106,52 @@ $ sudo rm -rf ./DHT11_Python
 - 「１つのモノを作成」を選んで「次へ」
 - 「モノの名前」に任意の名前を入力（「air-condition-pi」）して「次へ」
 - 「デバイス証明書」で「新しい証明書を自動生成 (推奨)」を選択して「次へ」
-- 「証明書にポリシーをアタッチ」で「ポリシーを作成」をクリック。新たに開かれたタブにて以下の内容を入力して「作成」をクリック。ポリシー作成後はタブは閉じてよい。
+- 「証明書にポリシーをアタッチ」で「ポリシーを作成」をクリック。新たに開かれたタブにて以下の内容を入力して「作成」をクリック。
   - 名前：air-condition-pi-policy　（任意に設定できるが、今回はこの名前とする）
   - 効果：「許可」
   - アクション：「*」（選択）
-  - リソースARN：「*」（入力）
+  - リソースARN：「*」（入力）<br>
+※ポリシー作成後はタブは閉じてよい。
 
-- ひとつ前の画面（証明書にポリシーをアタッチ）に戻り、作成したポリシーを選択して「モノを作成」をクリック。
-- ここで表示される証明書、プライベートキー、パブリックキーをすべてダウンロードする。<br>※ここでダウンロード失敗した場合はポリシー作成からやり直し
+- 「証明書にポリシーをアタッチ」に戻り、作成したポリシーを選択して「モノを作成」をクリック。
+- ここで表示される証明書、プライベートキー、パブリックキーをすべてダウンロードする。<br>
+※ここでダウンロード失敗した場合はポリシー作成からやり直し
 
 また、RaspberryPiが接続するための、IoTエンドポイントを以下の手順で確認する。
 - （AWS IoTメニューの）「設定」をクリック
 - 「デバイスデータエンドポイント」にある「エンドポイント」をメモする。
+***
+【リモート研修時】<br>
+★ダウンロードした証明書などのファイル類を、Teamsのチャット欄にアップロードしてもらう<br>
+★アップロードされたファイルを、講師側で札幌支店ラズパイのDownloadsフォルダに格納する<br>
+★エンドポイントもTeamsのチャット欄にアップロードしてもらう（モブプロドライバ交代時に引き継ぐため）
+***
 
-## <span style="color:#DD8800; ">（RaspberryPi）MQTT配信機能の作成</span>
-
-MQTTへの配信（パブリッシャ）機能を付与して、AWSと通信させる。
+## <span style="color:#DD8800; ">（RaspberryPi）MQTT配信機能の体験</span>
 
 MQTT動作確認用ソースを「AirCondition」フォルダにコピーする。
 ```
-$ cp home/pi/kensyu_aws_yyyymmdd/aircond2.py ./aircond2.py
+$ cp /home/pi/kensyu_aws_20220618/aircond2.py ./aircond2.py
 ```
 MQTTクライアントのライブラリをインストールする。
 ``` bash
 $ pip3 install paho-mqtt python-etcd
 ```
 
-「AirCondition」フォルダにコピーしたaircond2.pyに下記修正を行う。<br>
-※ソース上の定義部分「# Mqtt Define」の内容は、前述のデバイスデータエンドポイントや、証明書に置き換える。
+/home/pi/AirConditionにいることの確認
+```
+$ pwd
+```
+ファイルコピー
+```
+$ cp /home/pi/kensyu_aws_20220618/aircond2.py ./aircond2.py
+```
+
+「AirCondition」フォルダにコピーしたaircond2.pyに下記修正を行う。
+- ソース上の定義部分「# Mqtt Define」の内容を、前述のダウンロード/共有したデバイスデータエンドポイント・証明書に置き換える。
+  - AWSIoT_ENDPOINT
+  - MQTT_CERT
+  - MQTT_PRIKEY
 
 ---- 
 #### ここでのハマりどころ
@@ -166,9 +194,12 @@ November 01, 2021, 22:23:12 (UTC+0900)
     - パーティションキーは「GetDateTime」とする
     - 「テーブルの作成」ボタンをクリックする。
   - ロールの作成は任意。<span style="color:#FF4400;">「DynamoDB:PutItem」ポリシーを持つロールが必要</span>となる。
+***
+【リモート研修時】<br>
+ロールの作成は管理ポリシーから「 `AmazonDynamoDBFullAccess`」を選択させる
+***
 
-DynamoDBサービスで、「テーブル」>「項目の表示」をクリックして、センサから受信したデータが登録されていることを確認する。
-
+DynamoDBサービスで、「テーブル」>「項目の表示」をクリックして、センサから受信したデータが登録されていることを確認する。画面が更新されていないこともあるので、何度か画面更新も試す。
 
 ----
 #### ここでのハマりどころ
@@ -186,10 +217,15 @@ DynamoDBサービスで、「テーブル」>「項目の表示」をクリッ�
 ## <span style="color:#DD8800; ">（LINE Developers）LINEに通知先のチャネルを登録する
 [LINE Developers](https://developers.line.biz/ja/)にアクセスし、以下の手順でチャネルを作成する。
 - 画面右上から、LINEアカウントでログインする。
+***
+【リモート研修時】<br>
+★アイコンとgmail.comが晒されるのことを伝え、勇気ある代表者を募る<br>
+★絶対立候補してほしかったら事前に話しとおしておく
+***
 - 画面右下で「日本語」を選択。
 - メニュー「プロバイダ」>「作成」ボタンをクリック
   - 「プロバイダ名」に任意の名前を設定（「airCondition」）
-  - 「Message API」を選択
+  - 「Message API」を選択（真ん中あたりにあるはず）
   - 必須項目を登録して、「作成」ボタンをクリック（内容は任意）
     - チャネル名「お部屋の空調さん」
     - チャネル説明「お部屋の状態をお知らせします。」
@@ -197,9 +233,14 @@ DynamoDBサービスで、「テーブル」>「項目の表示」をクリッ�
     - 小業種「ガス」
 - 作成したプロバイダを選択する。Messaging API設定タブを選択する。
   - 表示されるQRコードを、スマホカメラで読み取ると、スマホのLINEに通知チャネルが登録される。
-  - 一番下にある「チャネルアクセストークン」をコピーして、控える（通知先として、この後のlambda
-に必要）
+  - 一番下にある「チャネルアクセストークン」の発行ボタンをクリック
+  - コピーして、控える（通知先として、この後のlambdaに必要）
 - Visual Studio Codeを起動して、LINEからピンポンがくるか、動作テスト。
+***
+【リモート研修時】<br>
+★上記を行うには、用意してもらうPCにまたはリモート環境上にVSCODEが入っている必要あり
+***
+- 新規作成（新しいテキストファイル）→下記の内容を書き込み、Ctrl+Alt+RでPOSTして動作確認
 ``` json
 POST https://api.line.me/v2/bot/message/broadcast
 Authorization: Bearer [チャネルアクセストークン]
@@ -228,11 +269,9 @@ $ mkdir airConditionNotifyLineFunc
 $ cd airConditionNotifyLineFunc
 ```
 直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。
-
+***
 ※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。<br>
 ※ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述のためいったん無視する。
-![修正後ソース](./doc/lambda_function_mod1.png)
-
 
 このソースファイルに必要なライブラリ「requests」を、カレントディレクトリ上にインストールする。
 ``` bash
@@ -362,9 +401,17 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   - 「アベイラビリティーゾーン」：アジアパシフィック (東京)ap-northeast-1a
   - 「IPv4 CIDR ブロック」：上記表に記載している種別「サブネット」に記載のIPアドレスを記入する
   - タグ：特に設定しない（上記で設定したVPC名だけ設定されている状態でよい）
+### 以下の手順で<b>EC2</b>を作成する。
+- 「サービス」から「EC2」を選択。
+- サイドメニュー「インスタンス」>右側の画面で「インスタンスを起動」を選択し、遷移後の画面で、以下を指定して「インスタンスを起動」をクリックする。
+  - 「名前とタグ」：上記表に記載している種別「EC2」に記載の名前を記入する
+  - 「Amazon マシンイメージ (AMI)」：Amanzon Linux 2 AMI (HVM) - Kernel 5
+  - 「アーキテクチャ」：64ビット(x86)
+  - 「インスタンスタイプ」：t3 large
+  - タグ：特に設定しない（上記で設定したVPC名だけ設定されている状態でよい）
 
 他、EC2作成以降の注意事項など。
-- なお、/16は先頭16ビットまでがサブネットマスクであることを示している（CIDR形式と呼ぶ）
+- /16は先頭16ビットまでがサブネットマスクであることを示している（CIDR形式と呼ぶ）
 - EC2を作成する前に、サブネットの「自動割当IP設定」を有効化する。
 
 - EC2作成時、セキュリティグループには、SSHアクセスだけを許可とする。Sourceは「マイIP」をクリックして自宅のIPからの要求だけ許可とする

@@ -273,15 +273,23 @@ Content-Type : application/json
 
 ## <span style="color:#DD8800; ">（RaspberryPi）AWS Lambda用のファンクションを作成する
 
-作業用のフォルダを作成する。
+作業用のフォルダを作成する。<br>
+/home/pi/AirConditionにいることの確認
 ``` bash
+$ pwd
+```
+```
 $ mkdir aws_lambda
 $ cd aws_lambda
 
 $ mkdir airConditionNotifyLineFunc
 $ cd airConditionNotifyLineFunc
 ```
-直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を作成する。
+直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を設置する（教材フォルダからlambda_function.pyをコピーする）
+
+```
+$ cp /home/pi/kensyu_aws_20220618/aws_lambda/airConditionNotifyLineFunc/lambda_function.py ./lambda_function.py
+```
 ***
 ※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。<br>
 ※ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述のためいったん無視する。

@@ -137,7 +137,7 @@ $ pwd
 ```
 ファイルコピー
 ```
-$ cp /home/pi/kensyu_aws_20220618/aircond2.py ./aircond2.py
+$ cp ../kensyu_aws_20220618/aircond2.py ./aircond2.py
 ```
 MQTTクライアントのライブラリをインストールする。
 ``` bash
@@ -288,7 +288,7 @@ $ cd airConditionNotifyLineFunc
 直下に、pythonソースファイル [lambda_function.py](./aws_lambda/airConditionNotifyLineFunc/lambda_function.py) を設置する（教材フォルダからlambda_function.pyをコピーする）
 
 ```
-$ cp /home/pi/kensyu_aws_20220618/aws_lambda/airConditionNotifyLineFunc/lambda_function.py ./lambda_function.py
+$ cp ../../../kensyu_aws_20220618/aws_lambda/airConditionNotifyLineFunc/lambda_function.py ./lambda_function.py
 ```
 ***
 ※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。<br>
@@ -395,6 +395,8 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
 
 ## <span style="color:#DD8800; ">（AWS）VPCネットワークとEC2環境を構築する
 
+![AWSNetWork](./doc/awsvpc.png)
+
 独立したVPN一つと、publicサブネットを一つ作成し、上にEC2を構築する。  
 
   |種別|名前|IPアドレス|  
@@ -402,8 +404,6 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   |VPC|biweb-dev-vpc|11.0.0.0/16|  
   |サブネット|biweb-dev-pub-subnet1|11.0.16.0/20|  
   |EC2|biweb-dev-web|11.0.20.any|  
-
-![AWSNetWork](./doc/awsvpc.png)
 
 ### 以下の手順で<b>VPC</b>を作成する
 - 「サービス」から「VPC」を選択。
@@ -422,6 +422,7 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   - 「アベイラビリティーゾーン」：アジアパシフィック (東京)ap-northeast-1a
   - 「IPv4 CIDR ブロック」：上記表に記載している種別「サブネット」に記載のIPアドレスを記入する
   - タグ：特に設定しない（上記で設定したVPC名だけ設定されている状態でよい）
+  - 作成後、作成したサブネットを選択後、アクション>「サブネットの設定の編集」を開きIP アドレスの自動割り当て設定（チェックを入れる）
 ### 以下の手順で<b>EC2</b>を作成する。
 - 「サービス」から「EC2」を選択。
 - サイドメニュー「インスタンス」>右側の画面で「インスタンスを起動」を選択し、遷移後の画面で、以下を指定して「インスタンスを起動」をクリックする。
@@ -429,26 +430,43 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
   - 「Amazon マシンイメージ (AMI)」：Amanzon Linux 2 AMI (HVM) - Kernel 5
   - 「アーキテクチャ」：64ビット(x86)
   - 「インスタンスタイプ」：t3 large
+  - 新しいキーペアの作成をクリック、アクセス用のキーペアをダウンロードして（というかされる）保存しておく
+  - 「ネットワーク設定」の「編集」をクリック
+    - 上記で作成したVPC,サブネットを選択する
+    - ぱうりっくの自動割り当てはONにする
+    - インバウンドのセキュリティグループには任意の名前と説明を設定する。セキュリティグループルールでは、SSHアクセスだけを許可とする。
+    - ソースタイプ（Source）は「自宅のIP（マイIP）」をクリックして自宅のIPからの要求だけ許可とすー
   - タグ：特に設定しない（上記で設定したVPC名だけ設定されている状態でよい）
+- EC2作成後、パブリックIPv4アドレスが割当されていることを確認する。
 
 他、EC2作成以降の注意事項など。
 - /16は先頭16ビットまでがサブネットマスクであることを示している（CIDR形式と呼ぶ）
-- EC2を作成する前に、サブネットの「自動割当IP設定」を有効化する。
-
-- EC2作成時、セキュリティグループには、SSHアクセスだけを許可とする。Sourceは「マイIP」をクリックして自宅のIPからの要求だけ許可とする
-- EC2作成後、アクセス用のキーペアをダウンロードして保存しておく。
-- EC2作成後、パブリックIPv4アドレスが割当されていることを確認する。
 
 <br>
 自PCからのSSHアクセス
-- VPCメニューから、インターネットゲートウェイを作成（biweb-dev-igw）して、サブネット（biweb-dev-pub-subnet1）にアタッチする。
 
-- VPCメニューから、サブネットを選択し、作成したサブネットのルートテーブルに以下を加える。 
-
+- VPCメニューから、インターネットゲートウェイ選択する
+- 画面に従って「biweb-dev-igw」作成
+- 画面に促されるまま作成したVPCにアタッチする
+- VPCメニューから、サブネットを選択
+- 先ほど作成したサブネット（biweb-dev-pub-subnet1）の左側にチェックを入れると画面下に「詳細」が出る
+- 真ん中あたりにあるルートテーブルをクリックする
+- ルートテーブルの編集画面に遷移するので画面下部の「ルートを編集」をクリック
+- 下記を追加　（インターネットゲートウェイってのを選択すると作成したigwを選択できるようになるので設定）
   |送信先|ターゲット|
   |--|--|
   |0.0.0.0/0|（作成したIGW）|
+***
+【リモート研修】
+SSMを利用した接続になるので、下記のteratermの説明は飛ばす
 
+リモート注意点
+- META端末にてログインする
+- EC2サービスを開き、作成したEC2のIDをクリックし、開いた画面上部の「接続」をクリック
+- SSHクライアントを選択し、下部にあるSSHコマンドをコピー
+- 踏み台サーバーのダウンロードフォルダに入っているだろうprmをec2-userフォルダに移動させておく
+- sudo をつけてsshコマンド実行
+***
 - ローカルPCで「Tera Term」を起動して、「Host」に作成したEC2のパブリックIPv4アドレスを指定する。  
   ![teraterm1](./doc/teraterm1.png)
 
@@ -460,8 +478,9 @@ $ zip -r airConditionNotifyLineFunc.zip ./*
 - 以下のとおり、ログインが成功すれば、準備OK。
 
   ![teraterm3](./doc/teraterm3.png)
-
-なお、Amazon Linux2 EC2は、システム時間がGMTとなっており、日本時間と9時間のずれがある。  
+***
+<br><br>
+Amazon Linux2 EC2は、システム時間がGMTとなっており、日本時間と9時間のずれがある。  
 [ここ](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/set-time.html#change_time_zone)を参考に、システム時間を日本標準時に設定する。
 
 その後、必要最低限のソフトをインストールして環境を準備する
@@ -583,8 +602,11 @@ $ sudo curl http://localhost:9200
 ```
 
 同様に外部からのアクセスを確認。最初にAWSのセキュリティグループで、ポート9200を許可設定する。
-
-![awsvpc2](./doc/awsvpc2.png)
+- VPC>作成したセキュリティグループを選択、「インバウンドのルールを編集」
+- カスタムTCPで　9200ポートでインスタンス「に」アクセスできるようにするから「インバウンド」なんじゃ
+- 
+- 
+![- awsvpc2](./doc/awsvpc2.png)
 
 ブラウザで「http://[ip address]:9200/」にアクセスし、上と同じ表示がされればOK。
 

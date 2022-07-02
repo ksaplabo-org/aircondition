@@ -1,46 +1,5 @@
 ![全景](./doc/全景.png)
 
-# <span style="color:#ffff00">事前準備 RasPi Wifi設定</span>
-
-## <span style="color:#DD8800; ">（RaspberryPi）Wifi設定の手順 ※既に行っている場合は飛ばしても良い</span>
-
-[※参考リンク（同GitのWiFi設定手順ページ）](https://github.com/ksaplabo-org/Raspi-Setup#wifi%E8%A8%AD%E5%AE%9A%E3%81%AE%E6%89%8B%E9%A0%86)
-
-OSインストールしたmicroSDのルートディレクトリダ配下に「ssh」という空のファイルを作成後、同階層に「wpa_supplicant.conf」というファイルを作成
-
-その後、「wpa_supplicant.conf」ファイル内に以下のように書き込んで設定は完了
-``` 
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-country=JP
-
-network={
-        ssid="1つ目のSSID"
-        psk="1つ目のSSIDのパスワード"
-        key_mgmt=WPA-PSK
-}
-```
-
-# <span style="color:#ffff00">事前準備２ 研修用資材設置</span>
-## <span style="color:#DD8800; ">研修で使用する下記資材を当日までにRaspberryPiに設置する</span>
-設置場所は下記
-```
-home/pi/kensyu_aws_20220618
-```
-※「_yyyymmdd」部分に、研修当日の日付を入れる<br><br>
-
-|格納フォルダ|格納資材|備考|
-|:--|:--|:--|
-|home/pi/kensyu_aws_20220618/kensyu_mqtt|[aircond2.py](./aircond2.py)|MQTT体験用|
-|home/pi/kensyu_aws_20220618/kensyu_mqtt|[aircond3.py](./aircond3.py)|追加課題体験用|
-<br>
-
-***
-★研修に使用するラズパイのDownloadsフォルダに何も入っていないことを確認する。余計なファイルは削除しておく
-***
-<br>
-
-
 # <span style="color:#22AAFF">センサで温湿度を計測し、AWSにデータを通知する</span>
 
 ## <span style="color:#DD8800; ">（RaspberryPi）温度・湿度センサー環境の作成</span>
@@ -56,7 +15,6 @@ $ cd AirCondition
 
 ![DHT11](./doc/DHT11.png)
 
-★上記図は修正予定<br><br>
 GitHubからDHT11のライブラリを取得する。
 ``` bash
 $ sudo git clone https://github.com/szazo/DHT11_Python.git
@@ -75,10 +33,6 @@ Temperature: 22.0 C
 Humidity: 73.0 %
 ：
 ```
-
-***
-★ここでexample.pyのプログラムの説明を行う
-***
 
 ライブラリ以外を削除する
 
@@ -120,12 +74,6 @@ $ sudo rm -rf ./DHT11_Python
 また、RaspberryPiが接続するための、IoTエンドポイントを以下の手順で確認する。
 - （AWS IoTメニューの）「設定」をクリック
 - 「デバイスデータエンドポイント」にある「エンドポイント」をメモする。
-***
-【リモート研修時】<br>
-★ダウンロードした証明書などのファイル類を、Teamsのチャット欄にアップロードしてもらう<br>
-★アップロードされたファイルを、講師側で札幌支店ラズパイのDownloadsフォルダに格納する<br>
-★エンドポイントもTeamsのチャット欄に貼ってもらう（モブプロドライバ交代時に引き継ぐため）
-***
 
 ## <span style="color:#DD8800; ">（RaspberryPi）MQTT配信機能の体験</span>
 
@@ -196,22 +144,7 @@ November 01, 2021, 22:23:12 (UTC+0900)
   - IoTCoreのタブに戻り、DynamoDBのテーブル名選択部分の隣の更新ボタンをクリックする
   - 先ほど作成したテーブルが選択できるようになっているので、選択する
   - ロールの作成は任意。（<span style="color:#FF4400;">「DynamoDB:PutItem」ポリシーを持つロールが選択</span>されていれば良い）
-  - ロール作成語は、画面下部の「次へ」「作成」を順にクリック
-***
-【リモート研修時】<br>
-- 「新しいロールを作成する」をクリックする
-- モーダル画面が表示されるので、ロール名を入力し、作成（「air-condition-role」）
-- 「表示」をクリックする。IAMのロール設定画面が表示されるので「アクセス許可を追加」を選択し、「ポリシーをアタッチ」を選択
-- 「その他の許可ポリシー」の検索窓に「DynamoDB」と入力
-- 「 `AmazonDynamoDBFullAccess`」をチェック
-- 「ポリシーをアタッチ」をクリック
-- 「ポリシーがロールに正常にアタッチされました」が表示されたらOK。IAMのタブを閉じる
-
-***
-aircond2.pyを実行する
-
-DynamoDBの画面を開き、「テーブル」>「項目の表示」をクリックして、センサから受信したデータが登録されていることを確認する。<br>
-画面が更新されていないこともあるので、何度か画面更新も試す。
+  - ロール作成後は、画面下部の「次へ」「作成」を順にクリック
 
 ----
 #### ここでのハマりどころ
@@ -229,11 +162,6 @@ DynamoDBの画面を開き、「テーブル」>「項目の表示」をクリ�
 ## <span style="color:#DD8800; ">（LINE Developers）LINEに通知先のチャネルを登録する
 [LINE Developers](https://developers.line.biz/ja/)にアクセスし、以下の手順でチャネルを作成する。
 - 画面右上から、LINEアカウントでログインする。
-***
-【リモート研修時】<br>
-★アイコンとgmail.comが晒されるのことを伝え、勇気ある代表者を募る<br>
-★絶対立候補してほしかったら事前に話しとおしておく
-***
 - 画面右下で「日本語」を選択。
 - メニュー「プロバイダ」>「作成」ボタンをクリック
   - 「プロバイダ名」に任意の名前を設定（「airCondition」）
@@ -248,10 +176,6 @@ DynamoDBの画面を開き、「テーブル」>「項目の表示」をクリ�
   - 一番下にある「チャネルアクセストークン」の発行ボタンをクリック
   - コピーして、控える（通知先として、この後のlambdaに必要）
 - Visual Studio Codeを起動して、LINEからピンポンがくるか、動作テスト。
-***
-【リモート研修時】<br>
-★上記を行うには、用意してもらうPCにまたはリモート環境上にVSCODEが入っている必要あり
-***
 VSCODEにREST Clientをインストールしてもらう<br>
 新規作成（新しいテキストファイル）→下記の内容を書き込み、Ctrl+Alt+RでPOSTして動作確認
 ``` json
@@ -290,9 +214,6 @@ $ cd airConditionNotifyLineFunc
 ```
 $ cp ../../../kensyu_aws_20220618/aws_lambda/airConditionNotifyLineFunc/lambda_function.py ./lambda_function.py
 ```
-***
-※ソースコード中の "access_token" は、後ほどlambda上で環境変数として設定する。<br>
-※ソースコードのコメントアウト部分は、追加課題で使用する二酸化炭素センサ用の記述のためいったん無視する。
 
 このソースファイルに必要なライブラリ「requests」を、カレントディレクトリ上にインストールする。
 ``` bash
@@ -603,9 +524,7 @@ $ sudo curl http://localhost:9200
 
 同様に外部からのアクセスを確認。最初にAWSのセキュリティグループで、ポート9200を許可設定する。
 - VPC>作成したセキュリティグループを選択、「インバウンドのルールを編集」
-- カスタムTCPで　9200ポートでインスタンス「に」アクセスできるようにするから「インバウンド」なんじゃ
-- 
-- 
+
 ![- awsvpc2](./doc/awsvpc2.png)
 
 ブラウザで「http://[ip address]:9200/」にアクセスし、上と同じ表示がされればOK。
